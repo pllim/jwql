@@ -59,9 +59,9 @@ class FGSBadPixelStats(models.Model):
     y_coord = ArrayField(models.IntegerField())
     type = models.CharField(max_length=MAX_LEN_TYPE, blank=True, null=True)
     source_files = models.TextField(blank=True, null=True)  # This field type is a guess.
-    obs_start_time = models.DateTimeField(blank=True, null=True)
-    obs_mid_time = models.DateTimeField(blank=True, null=True)
-    obs_end_time = models.DateTimeField(blank=True, null=True)
+    obs_start_time = ArrayField(models.CharField())
+    obs_mid_time = ArrayField(models.CharField())
+    obs_end_time = ArrayField(models.CharField())
     baseline_file = models.CharField(max_length=MAX_LEN_FILENAME, blank=True, null=True)
 
     class Meta:
@@ -97,9 +97,9 @@ class MIRIBadPixelStats(models.Model):
     y_coord = ArrayField(models.IntegerField())
     type = models.CharField(max_length=MAX_LEN_TYPE, blank=True, null=True)
     source_files = models.TextField(blank=True, null=True)  # This field type is a guess.
-    obs_start_time = models.DateTimeField(blank=True, null=True)
-    obs_mid_time = models.DateTimeField(blank=True, null=True)
-    obs_end_time = models.DateTimeField(blank=True, null=True)
+    obs_start_time = ArrayField(models.CharField())
+    obs_mid_time = ArrayField(models.CharField())
+    obs_end_time = ArrayField(models.CharField())
     baseline_file = models.CharField(max_length=MAX_LEN_FILENAME, null=True)
 
     class Meta:
@@ -135,9 +135,9 @@ class NIRCamBadPixelStats(models.Model):
     y_coord = ArrayField(models.IntegerField())
     type = models.CharField(max_length=MAX_LEN_TYPE, blank=True, null=True)
     source_files = models.TextField(blank=True, null=True)  # This field type is a guess.
-    obs_start_time = models.DateTimeField(blank=True, null=True)
-    obs_mid_time = models.DateTimeField(blank=True, null=True)
-    obs_end_time = models.DateTimeField(blank=True, null=True)
+    obs_start_time = ArrayField(models.CharField())
+    obs_mid_time = ArrayField(models.CharField())
+    obs_end_time = ArrayField(models.CharField())
     baseline_file = models.CharField(max_length=MAX_LEN_FILENAME, null=True)
 
     class Meta:
@@ -173,9 +173,9 @@ class NIRISSBadPixelStats(models.Model):
     y_coord = ArrayField(models.IntegerField())
     type = models.CharField(max_length=MAX_LEN_TYPE, blank=True, null=True)
     source_files = models.TextField(blank=True, null=True)  # This field type is a guess.
-    obs_start_time = models.DateTimeField(blank=True, null=True)
-    obs_mid_time = models.DateTimeField(blank=True, null=True)
-    obs_end_time = models.DateTimeField(blank=True, null=True)
+    obs_start_time = ArrayField(models.CharField())
+    obs_mid_time = ArrayField(models.CharField())
+    obs_end_time = ArrayField(models.CharField())
     baseline_file = models.CharField(max_length=MAX_LEN_FILENAME, null=True)
 
     class Meta:
@@ -211,9 +211,9 @@ class NIRSpecBadPixelStats(models.Model):
     y_coord = ArrayField(models.IntegerField())
     type = models.CharField(max_length=MAX_LEN_TYPE, blank=True, null=True)
     source_files = models.TextField(blank=True, null=True)  # This field type is a guess.
-    obs_start_time = models.DateTimeField(blank=True, null=True)
-    obs_mid_time = models.DateTimeField(blank=True, null=True)
-    obs_end_time = models.DateTimeField(blank=True, null=True)
+    obs_start_time = ArrayField(models.CharField())
+    obs_mid_time = ArrayField(models.CharField())
+    obs_end_time = ArrayField(models.CharField())
     baseline_file = models.CharField(max_length=MAX_LEN_FILENAME, null=True)
 
     class Meta:
