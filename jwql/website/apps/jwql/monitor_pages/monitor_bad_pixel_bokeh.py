@@ -296,7 +296,7 @@ class BadPixelData():
                 self.num_files[bad_type] = 0
                 self.baseline_file[bad_type] = ''
             else:
-                self.new_bad_pix[bad_type] = (record.x_coord, record.y)
+                self.new_bad_pix[bad_type] = (record.x_coord, record.y_coord)
                 self.background_file[bad_type] = record.source_file
                 self.obs_start_time[bad_type] = record.obs_start_time
                 self.obs_end_time[bad_type] = record.obs_end_time

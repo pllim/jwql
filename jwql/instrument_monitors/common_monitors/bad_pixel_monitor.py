@@ -480,7 +480,7 @@ class BadPixels:
             "obs_mid_time": obs_mid_time,
             "obs_end_time": obs_end_time,
             "baseline_file": baseline_file,
-            "entry_date": datetime.datetime.now(),
+            "entry_date": datetime.datetime.now(datetime.timezone.utc),
         }
         entry = self.pixel_table(**entry)
         entry.save()
@@ -806,7 +806,7 @@ class BadPixels:
         parameters["INSTRUME"] = self.instrument.upper()
         parameters["SUBARRAY"] = "FULL"
         parameters["DATE-OBS"] = datetime.date.today().isoformat()
-        current_date = datetime.datetime.now()
+        current_date = datetime.datetime.now(datetime.timezone.utc)
         parameters["TIME-OBS"] = current_date.time().isoformat()
         parameters["DETECTOR"] = self.detector.upper()
         if self.instrument.upper() == "NIRCAM":
@@ -1593,7 +1593,7 @@ class BadPixels:
                     "run_bpix_from_darks": run_darks,
                     "run_bpix_from_flats": run_flats,
                     "run_monitor": run_flats or run_darks,
-                    "entry_date": datetime.datetime.now(),
+                    "entry_date": datetime.datetime.now(datetime.timezone.utc),
                 }
                 entry = self.query_table(**new_entry)
                 entry.save()
