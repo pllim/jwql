@@ -52,7 +52,7 @@ from jwql.utils import permissions
 from jwql.utils.constants import FILE_AC_CAR_ID_LEN, FILE_AC_O_ID_LEN, FILE_ACT_LEN, \
     FILE_DATETIME_LEN, FILE_EPOCH_LEN, FILE_GUIDESTAR_ATTMPT_LEN_MIN, \
     FILE_GUIDESTAR_ATTMPT_LEN_MAX, FILE_OBS_LEN, FILE_PARALLEL_SEQ_ID_LEN, \
-    FILE_PROG_ID_LEN, FILE_SEG_LEN, FILE_SOURCE_ID_LEN, FILE_SUFFIX_TYPES, \
+    FILE_PROG_ID_LEN, FILE_SEG_LEN, FILE_SOURCE_ID_LEN, FILE_SOURCE_ID_LONG_LEN, FILE_SUFFIX_TYPES, \
     FILE_TARG_ID_LEN, FILE_VISIT_GRP_LEN, FILE_VISIT_LEN, FILETYPE_WO_STANDARD_SUFFIX, \
     JWST_INSTRUMENT_NAMES_SHORTHAND, ON_GITHUB_ACTIONS
 __location__ = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -425,6 +425,17 @@ def filename_parser(filename):
         r"(?P<observation>\d{" + f"{FILE_OBS_LEN}" + "})"\
         r"(?P<visit>\d{" + f"{FILE_VISIT_LEN}" + "})"\
         r"(_.._msa.fits)"
+
+    # Stage 2 WFSS source-based files
+    # e.g. jw06434-c1021_s000001510_nircam_f444w-grismr
+    #stage_2_source = \
+    #    r"jw" \
+    #    r"(?P<program_id>\d{" + f"{FILE_PROG_ID_LEN}" + "})"\
+    #    r"-(?P<ac_id>(o\d{" + f"{FILE_AC_O_ID_LEN}" + r"}|(c|a|r)\d{" + f"{FILE_AC_CAR_ID_LEN}" + "}))"\
+    #    r"_(?P<target_id>(s)\d{" + f"{FILE_SOURCE_ID_LONG_LEN}" + "})"\
+    #    r"_(?P<instrument>(nircam|niriss|nirspec|miri|fgs))"\
+    #    r"_(?P<optical_elements>((?!_)[\w-])+)"\
+    #    r"-"
 
     # Stage 3 filenames with target ID
     # e.g. "jw80600-o009_t001_miri_f1130w_i2d.fits"
