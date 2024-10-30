@@ -426,17 +426,6 @@ def filename_parser(filename):
         r"(?P<visit>\d{" + f"{FILE_VISIT_LEN}" + "})"\
         r"(_.._msa.fits)"
 
-    # Stage 2 WFSS source-based files
-    # e.g. jw06434-c1021_s000001510_nircam_f444w-grismr
-    #stage_2_source = \
-    #    r"jw" \
-    #    r"(?P<program_id>\d{" + f"{FILE_PROG_ID_LEN}" + "})"\
-    #    r"-(?P<ac_id>(o\d{" + f"{FILE_AC_O_ID_LEN}" + r"}|(c|a|r)\d{" + f"{FILE_AC_CAR_ID_LEN}" + "}))"\
-    #    r"_(?P<target_id>(s)\d{" + f"{FILE_SOURCE_ID_LONG_LEN}" + "})"\
-    #    r"_(?P<instrument>(nircam|niriss|nirspec|miri|fgs))"\
-    #    r"_(?P<optical_elements>((?!_)[\w-])+)"\
-    #    r"-"
-
     # Stage 3 filenames with target ID
     # e.g. "jw80600-o009_t001_miri_f1130w_i2d.fits"
     stage_3_target_id = \
