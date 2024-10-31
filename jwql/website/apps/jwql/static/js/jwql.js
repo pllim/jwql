@@ -310,13 +310,15 @@ function determine_page_title_obs(instrument, proposal, observation) {
     }
 }
 
+
 /**
- * Construct a 4-column table from an input dictionary. The 4 columns
- * correspond to:  key, value, key, value.
- * @dictionary {dict} jsonified dictionary
+ * Populate a user provided html table from a dictionary
+ * @param {Object} dictionary - Python style dictionary
+ * @param {String} table_name - The table name in that will be updated
+ * @param {Integer} nr_paired_columns - How many paired columns per row.  One "paired column" is 2 columns (1 key, 1 value)
  */
-function make_table_from_dict(dictionary) {
-    var tableBody = document.getElementById("table-body");
+function make_table_from_dict(dictionary, table_name, nr_paired_columns) {
+    var tableBody = document.getElementById(table_name);
     // Extract keys and values from the dictionary
     var keys = Object.keys(dictionary);
     var values = Object.values(dictionary);
@@ -326,19 +328,19 @@ function make_table_from_dict(dictionary) {
     var maxLength = keys.length
 
     // Populate the table dynamically
-    for (var i = 0; i < maxLength; i+=2) {
+    // Create a row with dynamic amount of paired_columns (Key Column with Value Column)
+    var table_index = 0
+    for (var i = 0; i < maxLength; i+=nr_paired_columns) {
         var row = document.createElement("tr");
-        var row = tableBody.insertRow(i/2)
-        var cell1 = row.insertCell(0)
-        var cell2 = row.insertCell(1)
-        var cell3 = row.insertCell(2)
-        var cell4 = row.insertCell(3)
-
-        cell1.textContent = i < keys.length ? keys[i]+':' : "";
-        cell2.textContent = i < keys.length ? values[i] : "";
-        cell3.textContent = (i+1) < keys.length ? keys[i+1]+':' : "";
-        cell4.textContent = (i+1) < keys.length ? values[i+1] : "";
-
+        var row = tableBody.insertRow(i/nr_paired_columns)
+        // Fill cells in as pairs
+        for (var columnx = 0; columnx < nr_paired_columns*2; columnx+=2){
+            var key_cell = row.insertCell(columnx)
+            var value_cell = row.insertCell(columnx + 1)
+            key_cell.textContent = i < keys.length ? keys[table_index]+':' : "";
+            value_cell.textContent = i < keys.length ? values[table_index] : "";
+            table_index++
+        }
         tableBody.appendChild(row);
     }
     return tableBody;
@@ -1040,8 +1042,7 @@ function update_msata_page(base_url) {
 
             // Build div content
             var content = data["div"];
-            content += data["script1"];
-            content += data["script2"];
+            content += data["script"];
 
             /* Add the content to the div
             *    Note: <script> elements inserted via innerHTML are intentionally disabled/ignored by the browser.  Directly inserting script via jquery.
@@ -1073,8 +1074,7 @@ function update_wata_page(base_url) {
 
             // Build div content
             var content = data["div"];
-            content += data["script1"];
-            content += data["script2"];
+            content += data["script"];
 
             /* Add the content to the div
             *    Note: <script> elements inserted via innerHTML are intentionally disabled/ignored by the browser.  Directly inserting script via jquery.
@@ -1255,7 +1255,7 @@ function update_header_display(extension, num_extensions) {
  */
 function update_obs_options(data, inst, prop, observation) {
     // Build div content
-    var content = 'Available observations:';
+    var content = 'Available obs:';
     content += '<div class="dropdown">';
     content += '<button class="btn btn-primary dropdown-toggle" type="button" id="obs_dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Obs' + observation + '</button>';
     content += '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
@@ -1350,6 +1350,9 @@ function update_thumbnail_array(data) {
         var viewed = file.viewed;
         var exp_type = file.exp_type;
         var filename_dict = file.filename_dict;
+        var filter_type = file.filter;
+        var pupil_type = file.pupil;
+        var grating_type = file.grating;
 
         // Build div content
         var instrument;
@@ -1362,7 +1365,8 @@ function update_thumbnail_array(data) {
                       '" data-detector="' + filename_dict.detector + '" data-proposal="' + filename_dict.program_id +
                       '" data-file_root="' + rootname + '" data-group_root="' + filename_dict.group_root +
                       '" data-exp_start="' + file.expstart + '" data-look="' + viewed + '" data-exp_type="' + exp_type +
-                      '" data-visit="' + filename_dict.visit + '">';
+                      '" data-visit="' + filename_dict.visit + '" data-filter="' + filter_type + '" data-pupil="' + pupil_type +
+                      '" data-grating="' + grating_type + '">';
         content += '<div class="thumbnail-group">'
         content += '<a class="thumbnail-link" href="#" data-image-href="/' +
                    instrument + '/' + rootname + '/" data-group-href="/' +
