@@ -37,6 +37,7 @@ from jwql.utils.constants import DETECTOR_PER_INSTRUMENT, FLATS_BAD_PIXEL_TYPES,
 from jwql.utils.constants import ON_GITHUB_ACTIONS, ON_READTHEDOCS
 from jwql.utils.permissions import set_permissions
 from jwql.utils.utils import filesystem_path, get_config, read_png, save_png
+from jwql.website.apps.jwql.models import get_unique_values_per_column
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = get_config()['outputs']
