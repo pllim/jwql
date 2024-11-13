@@ -172,10 +172,13 @@ References
     For more information please see:
         ```https://docs.djangoproject.com/en/2.0/topics/db/models/```
 """
+
 # This is an auto-generated Django model module.
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+
+from jwql.utils.constants import DEFAULT_MODEL_CHARFIELD, MAX_LEN_FILTER
 
 
 class Monitor(models.Model):
@@ -187,7 +190,7 @@ class Monitor(models.Model):
 
     class Meta:
         managed = True
-        db_table = 'monitor'
+        db_table = "monitor"
 
 
 class CentralStorage(models.Model):
@@ -199,18 +202,34 @@ class CentralStorage(models.Model):
 
     class Meta:
         managed = True
-        db_table = 'central_storage'
+        db_table = "central_storage"
 
 
 class FilesystemCharacteristics(models.Model):
     date = models.DateTimeField()
     instrument = models.TextField()  # This field type is a guess.
-    filter_pupil = models.TextField(blank=True, null=True)  # This field type is a guess.
-    obs_per_filter_pupil = models.TextField(blank=True, null=True)  # This field type is a guess.
+    filter_pupil = ArrayField(
+        models.CharField(
+            max_length=MAX_LEN_FILTER,
+            help_text="source file names",
+            default=DEFAULT_MODEL_CHARFIELD,
+        ),
+        blank=True,
+        null=True,
+    )
+    obs_per_filter_pupil = ArrayField(
+        models.CharField(
+            max_length=MAX_LEN_FILTER,
+            help_text="source file names",
+            default=DEFAULT_MODEL_CHARFIELD,
+        ),
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         managed = True
-        db_table = 'filesystem_characteristics'
+        db_table = "filesystem_characteristics"
 
 
 class FilesystemGeneral(models.Model):
@@ -224,7 +243,7 @@ class FilesystemGeneral(models.Model):
 
     class Meta:
         managed = True
-        db_table = 'filesystem_general'
+        db_table = "filesystem_general"
 
 
 class FilesystemInstrument(models.Model):
@@ -236,8 +255,8 @@ class FilesystemInstrument(models.Model):
 
     class Meta:
         managed = True
-        db_table = 'filesystem_instrument'
-        unique_together = (('date', 'instrument', 'filetype'),)
+        db_table = "filesystem_instrument"
+        unique_together = (("date", "instrument", "filetype"),)
 
 
 class FgsAnomaly(models.Model):
@@ -257,7 +276,7 @@ class FgsAnomaly(models.Model):
 
     class Meta:
         managed = True
-        db_table = 'fgs_anomaly'
+        db_table = "fgs_anomaly"
 
 
 class MiriAnomaly(models.Model):
@@ -274,15 +293,19 @@ class MiriAnomaly(models.Model):
     row_pull_down = models.BooleanField()
     other = models.BooleanField()
     column_pull_down = models.BooleanField()
-    mrs_glow = models.BooleanField(db_column='MRS_Glow')  # Field name made lowercase.
-    mrs_zipper = models.BooleanField(db_column='MRS_Zipper')  # Field name made lowercase.
+    mrs_glow = models.BooleanField(db_column="MRS_Glow")  # Field name made lowercase.
+    mrs_zipper = models.BooleanField(
+        db_column="MRS_Zipper"
+    )  # Field name made lowercase.
     row_pull_up = models.BooleanField()
-    lrs_contamination = models.BooleanField(db_column='LRS_Contamination')  # Field name made lowercase.
+    lrs_contamination = models.BooleanField(
+        db_column="LRS_Contamination"
+    )  # Field name made lowercase.
     tree_rings = models.BooleanField()
 
     class Meta:
         managed = True
-        db_table = 'miri_anomaly'
+        db_table = "miri_anomaly"
 
 
 class NircamAnomaly(models.Model):
@@ -307,7 +330,7 @@ class NircamAnomaly(models.Model):
 
     class Meta:
         managed = True
-        db_table = 'nircam_anomaly'
+        db_table = "nircam_anomaly"
 
 
 class NirissAnomaly(models.Model):
@@ -329,7 +352,7 @@ class NirissAnomaly(models.Model):
 
     class Meta:
         managed = True
-        db_table = 'niriss_anomaly'
+        db_table = "niriss_anomaly"
 
 
 class NirspecAnomaly(models.Model):
@@ -345,10 +368,12 @@ class NirspecAnomaly(models.Model):
     data_transfer_error = models.BooleanField()
     ghost = models.BooleanField()
     snowball = models.BooleanField()
-    dominant_msa_leakage = models.BooleanField(db_column='Dominant_MSA_Leakage')  # Field name made lowercase.
+    dominant_msa_leakage = models.BooleanField(
+        db_column="Dominant_MSA_Leakage"
+    )  # Field name made lowercase.
     optical_short = models.BooleanField()
     other = models.BooleanField()
 
     class Meta:
         managed = True
-        db_table = 'nirspec_anomaly'
+        db_table = "nirspec_anomaly"
