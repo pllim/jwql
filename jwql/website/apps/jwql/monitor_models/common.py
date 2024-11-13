@@ -211,18 +211,14 @@ class FilesystemCharacteristics(models.Model):
     filter_pupil = ArrayField(
         models.CharField(
             max_length=MAX_LEN_FILTER,
-            help_text="source file names",
+            help_text="filter and/or pupil name",
             default=DEFAULT_MODEL_CHARFIELD,
         ),
         blank=True,
         null=True,
     )
     obs_per_filter_pupil = ArrayField(
-        models.CharField(
-            max_length=MAX_LEN_FILTER,
-            help_text="source file names",
-            default=DEFAULT_MODEL_CHARFIELD,
-        ),
+        models.IntegerField(),
         blank=True,
         null=True,
     )
