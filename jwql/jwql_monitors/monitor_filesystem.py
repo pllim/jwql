@@ -79,6 +79,7 @@ OUTPUTS = SETTINGS['outputs']
 PREVIEW_IMAGES = SETTINGS['preview_image_filesystem']
 THUMBNAILS = SETTINGS['thumbnail_filesystem']
 LOGS = SETTINGS['log_dir']
+WORKING = SETTINGS['working']
 
 
 def files_per_filter():
@@ -237,7 +238,8 @@ def get_area_stats(central_storage_dict):
              'logs': LOGS,
              'preview_images': PREVIEW_IMAGES,
              'thumbnails': THUMBNAILS,
-             'all': CENTRAL}
+             'all': CENTRAL,
+             'working':WORKING}
 
     counteddirs = []
 
@@ -373,7 +375,7 @@ def initialize_results_dicts():
         A dictionary for the ``central_storage`` database table
     """
 
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(datetime.timezone.utc)
 
     general_results_dict = {}
     general_results_dict['date'] = now
@@ -452,7 +454,7 @@ def update_characteristics_database(char_info):
         using that filter/pupil.
     """
     logging.info('\tUpdating the characteristics database')
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(datetime.timezone.utc)
 
     # Add data to filesystem_instrument table
     for instrument in ['nircam', 'niriss', 'nirspec', 'miri']:
