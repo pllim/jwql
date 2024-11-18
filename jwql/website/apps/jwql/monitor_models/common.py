@@ -177,8 +177,12 @@ References
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django_enum import EnumField
+from enum import Enum
 
-from jwql.utils.constants import DEFAULT_MODEL_CHARFIELD, MAX_LEN_FILTER
+from jwql.utils.constants import DEFAULT_MODEL_CHARFIELD, MAX_LEN_FILTER, FILE_SUFFIX_TYPES
+
+FILE_SUFFIX_CLASS = Enum('FILE_SUFFIX_CLASS', FILE_SUFFIX_TYPES)
 
 
 class Monitor(models.Model):
@@ -244,9 +248,8 @@ class FilesystemGeneral(models.Model):
 
 class FilesystemInstrument(models.Model):
     date = models.DateTimeField()
-    instrument = models.TextField()  # This field type is a guess.
-    filetype = models.TextField()  # This field type is a guess.
-    count = models.IntegerField()
+    filetype = EnumField(FILE_SUFFIX_CLASS)  # This field type is a guess.
+    count = EnumField(FILE_SUFFIX_CLASS)
     size = models.FloatField()
 
     class Meta:
