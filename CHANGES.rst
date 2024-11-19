@@ -1,5 +1,138 @@
 ## What's Changed
 
+1.2.11 (2024-08-26)
+===================
+
+Web Application
+~~~~~~~~~~~~~~~
+- Customize colorbar location and size based on aperture size by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1592
+- Add keyword to specify program IDs for preview image creation by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1602
+- Adjust view image and view exposure to allow for larger preview images by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1600
+- filter thumbnails by filter/pupil/grating by @BradleySappington in https://github.com/spacetelescope/jwql/pull/1623
+- Add Image and Exposure level Comments by @BradleySappington in https://github.com/spacetelescope/jwql/pull/1624
+- Update NRS TA Monitor Plotting by @mfixstsci in https://github.com/spacetelescope/jwql/pull/1633
+- Fix readnoise monitor plot y range by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1634
+
+Project & API Documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Update Bokeh `filter` Keyword in NRS TA Monitors by @mfixstsci in https://github.com/spacetelescope/jwql/pull/1620
+- Switch dark monitor to use django models by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1493
+- Fix log cleanup script by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1628
+- Fix missing data in readnoise monitor plots by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1631
+- filename_parser() no longer raises an exception for unrecognized files by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1614
+
+
+1.2.10 (2024-07-10)
+===================
+
+Duplicate of 1.2.9, caused by changes to versioning conflicts with pypi. 
+
+
+1.2.9 (2024-07-10)
+==================
+
+Web Application
+~~~~~~~~~~~~~~~
+- Add Download CSV button to query page by @BradleySappington in https://github.com/spacetelescope/jwql/pull/1561
+- show file anomalies on exposure group page by @BradleySappington in https://github.com/spacetelescope/jwql/pull/1564
+- create generic error page to handle exceptions in views. by @BradleySappington in https://github.com/spacetelescope/jwql/pull/1549
+
+Project & API Documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- final model define for faking by @BradleySappington in https://github.com/spacetelescope/jwql/pull/1544
+- Update Redis Package Names in Environment Files by @mfixstsci in https://github.com/spacetelescope/jwql/pull/1546
+- [SCSB-145] require Python 3.10 by @zacharyburnett in https://github.com/spacetelescope/jwql/pull/1515
+- debug false by default by @BradleySappington in https://github.com/spacetelescope/jwql/pull/1550
+- Update NIRSpec TA Monitors to use Django DB Models by @mfixstsci in https://github.com/spacetelescope/jwql/pull/1499
+- Update NIRSpec TA Models by @mfixstsci in https://github.com/spacetelescope/jwql/pull/1565
+- Remove codecov.yml by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1588
+- Remove filename parser test over filesystem by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1586
+- Update remote to upstream in pull_jwql_branch.sh by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1591
+- Add Dependencies for Servers in `pyproject.toml` by @mfixstsci in https://github.com/spacetelescope/jwql/pull/1568
+- fix release upload step condition to match workflow trigger by @zacharyburnett in https://github.com/spacetelescope/jwql/pull/1593
+- fix environment freeze workflow not picking up tag by @zacharyburnett in https://github.com/spacetelescope/jwql/pull/1594
+- fix version matching pattern by @zacharyburnett in https://github.com/spacetelescope/jwql/pull/1595
+- updating freeze matrix to include linux, mac and python 3.12 by @mfixstsci in https://github.com/spacetelescope/jwql/pull/1596
+- Remove P750L from list of NIRSpec filters by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1598
+- [build] fix `runs-on:` and update build filename for easier parsing by @zacharyburnett in https://github.com/spacetelescope/jwql/pull/1599
+- upload to PyPI on release by @zacharyburnett in https://github.com/spacetelescope/jwql/pull/1601
+- Updating jwst_reffiles version number by @mfixstsci in https://github.com/spacetelescope/jwql/pull/1606
+- Remove old presentations from repo by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1607
+- Num results fix by @BradleySappington in https://github.com/spacetelescope/jwql/pull/1608
+- Add Environment Update Script by @mfixstsci in https://github.com/spacetelescope/jwql/pull/1609
+- Add new NIRISS AMI-related suffixes by @bhilbert4 in https://github.com/spacetelescope/jwql/pull/1613
+
+
+1.2.8 (2024-04-18)
+==================
+
+Web Application
+~~~~~~~~~~~~~~~
+
+Project & API Documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- final model define for faking by @BradleySappington
+
+
+1.2.7 (2024-04-18)
+==================
+
+Web Application
+~~~~~~~~~~~~~~~
+
+Project & API Documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Import monitor models by @bhilbert4
+
+
+1.2.6 (2024-04-15)
+==================
+
+Web Application
+~~~~~~~~~~~~~~~
+- Update NIRCam Background Monitor plots to handle new Claw Monitor columns by @bsunnquist
+
+Project & API Documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- add default to read_patt_num by @BradleySappington
+- migration work for next RC by @BradleySappington
+- Fix database empty fields by @BradleySappington
+
+
+1.2.5 (2024-03-19)
+==================
+
+Web Application
+~~~~~~~~~~~~~~~
+- Fix Bokeh `file_html` Call by @mfixstsci
+- Update Bad Pix Exclude Line by @mfixstsci
+- Interactive preview image - updates for Bokeh 3 by @bhilbert4
+
+Project & API Documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Allow creation of pngs from 3D and 4D arrays by @bhilbert4
+- Add max length to charfield by @BradleySappington
+- Header fix by @BradleySappington
+
+
+1.2.4 (2024-03-11)
+==================
+
+Web Application
+~~~~~~~~~~~~~~~
+- Fix Broken Dashboard - ReImplement Anomaly Dash @BradleySappington
+- Add more info to image- and exposure-level pages @bhilbert4
+
+Project & API Documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- create pull_jwql_branch.sh by @BradleySappington
+- Claw monitor migrate by @york-stsci
+- Update readnoise monitor to use django database models by @york-stsci
+- Migration to django management by @york-stsci
+- Get subarray lists from datamodels schema by @bhilbert4
+- Retrieve program number and category efficiently by @bhilbert4
+
+
 1.2.3 (2024-01-26)
 ==================
 
