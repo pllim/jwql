@@ -184,6 +184,12 @@ from jwql.utils.constants import DEFAULT_MODEL_CHARFIELD, MAX_LEN_FILTER, FILE_S
 
 FILE_SUFFIX_CLASS = Enum('FILE_SUFFIX_CLASS', FILE_SUFFIX_TYPES)
 
+class InstrumentEnum(Enum):
+    FGS_TYPE = "fgs"
+    MIRI_TYPE = "miri"
+    NIRCAM_TYPE = "nircam"
+    NIRISS_TYPE = "niriss"
+    NIRSPEC_TYPE = "nirspec"
 
 class Monitor(models.Model):
     monitor_name = models.CharField()
@@ -248,8 +254,9 @@ class FilesystemGeneral(models.Model):
 
 class FilesystemInstrument(models.Model):
     date = models.DateTimeField()
+    instrument = EnumField(InstrumentEnum) # This field type is a guess.
     filetype = EnumField(FILE_SUFFIX_CLASS)  # This field type is a guess.
-    count = EnumField(FILE_SUFFIX_CLASS)
+    count = models.IntegerField()
     size = models.FloatField()
 
     class Meta:
