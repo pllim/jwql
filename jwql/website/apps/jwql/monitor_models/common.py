@@ -178,13 +178,13 @@ References
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django_enum import EnumField
-from enum import Enum
+from enum import StrEnum
 
 from jwql.utils.constants import DEFAULT_MODEL_CHARFIELD, MAX_LEN_FILTER, FILE_SUFFIX_TYPES
 
-FILE_SUFFIX_CLASS = Enum('FILE_SUFFIX_CLASS', FILE_SUFFIX_TYPES)
+FILE_SUFFIX_CLASS = StrEnum('FILE_SUFFIX_CLASS', FILE_SUFFIX_TYPES)
 
-class InstrumentEnum(Enum):
+class InstrumentEnum(StrEnum):
     FGS_TYPE = "fgs"
     MIRI_TYPE = "miri"
     NIRCAM_TYPE = "nircam"
@@ -217,7 +217,7 @@ class CentralStorage(models.Model):
 
 class FilesystemCharacteristics(models.Model):
     date = models.DateTimeField()
-    instrument = models.TextField()  # This field type is a guess.
+    instrument = EnumField(InstrumentEnum)  # This field type is a guess.
     filter_pupil = ArrayField(
         models.CharField(
             max_length=MAX_LEN_FILTER,
