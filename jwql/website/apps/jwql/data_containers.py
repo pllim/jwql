@@ -2057,12 +2057,15 @@ def text_scrape(prop_id):
     program_meta : dict
         Dictionary containing information about program
     """
+    # Ensure prop_id is a 5-digit string
+    prop_id = str(prop_id).zfill(5)
 
     # Generate url
-    url = 'http://www.stsci.edu/cgi-bin/get-proposal-info?id=' + str(prop_id) + '&submit=Go&observatory=JWST'
+    url = f'https://www.stsci.edu/jwst-program-info/program/?program={prop_id}'
     html = BeautifulSoup(requests.get(url).text, 'lxml')
     not_available = "not available via this interface" in html.text
     not_available |= "temporarily unable" in html.text
+    not_available |= "internal error" in html.text
 
     program_meta = {}
     program_meta['prop_id'] = prop_id
