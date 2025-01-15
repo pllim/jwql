@@ -36,8 +36,11 @@ import re
 import numpy as np
 
 from jwql.utils import permissions
-from jwql.utils.constants import IGNORED_SUFFIXES, JWST_INSTRUMENT_NAMES_SHORTHAND, NIRCAM_LONGWAVE_DETECTORS, \
-    NIRCAM_SHORTWAVE_DETECTORS, PREVIEW_IMAGE_LISTFILE, THUMBNAIL_LISTFILE
+from jwql.utils.constants import (IGNORED_SUFFIXES,
+                                  JWST_INSTRUMENT_NAMES_SHORTHAND,
+                                  NIRCAM_LONGWAVE_DETECTORS,
+                                  NIRCAM_SHORTWAVE_DETECTORS
+                                  )
 from jwql.utils.logging_functions import log_info, log_fail
 from jwql.utils.protect_module import lock_module
 from jwql.utils.preview_image import PreviewImage
