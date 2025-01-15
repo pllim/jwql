@@ -69,7 +69,6 @@ from jwql.utils.constants import (
     SUFFIXES_TO_ADD_ASSOCIATION,
     SUFFIXES_WITH_AVERAGED_INTS,
     THUMBNAIL_FILTER_LOOK,
-    THUMBNAIL_LISTFILE,
     QueryConfigKeys,
 )
 from jwql.utils.credentials import get_mast_token
@@ -1871,43 +1870,6 @@ def get_rootnames_from_query(parameters):
         filtered_rootnames.extend(rootnames)
 
     return filtered_rootnames
-
-
-def get_thumbnails_by_instrument(inst):
-    """Return a list of thumbnails available in the filesystem for the
-    given instrument.
-
-    Parameters
-    ----------
-    inst : str
-        The instrument of interest (e.g. ``NIRCam``).
-
-    Returns
-    -------
-    preview_images : list
-        A list of thumbnails available in the filesystem for the
-        given instrument.
-    """
-    # Get list of all thumbnails
-    thumb_inventory = f'{THUMBNAIL_LISTFILE}_{inst.lower()}.txt'
-    all_thumbnails = retrieve_filelist(os.path.join(THUMBNAIL_FILESYSTEM, thumb_inventory))
-
-    thumbnails = []
-    all_proposals = get_instrument_proposals(inst)
-    for proposal in all_proposals:
-        results = mast_query_filenames_by_instrument(inst, proposal)
-
-        # Parse the results to get the rootnames
-        filenames = [result['filename'].split('.')[0] for result in results]
-
-        if len(filenames) > 0:
-            # Get subset of preview images that match the filenames
-            prop_thumbnails = [os.path.basename(item) for item in all_thumbnails if
-                               os.path.basename(item).split('_integ')[0] in filenames]
-
-            thumbnails.extend(prop_thumbnails)
-
-    return thumbnails
 
 
 def get_thumbnails_by_proposal(proposal):
