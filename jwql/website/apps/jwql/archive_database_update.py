@@ -55,27 +55,30 @@ from jwql.utils.constants import (DEFAULT_MODEL_CHARFIELD,
                                   FILE_AC_O_ID_LEN,
                                   FILE_AC_CAR_ID_LEN,
                                   FILE_SOURCE_ID_LONG_LEN,
-                                  FILE_TARG_ID_LEN
+                                  FILE_TARG_ID_LEN,
+                                  ON_GITHUB_ACTIONS,
+                                  ON_READTHEDOCS
                                   )
 
-# These lines are needed in order to use the Django models in a standalone
-# script (as opposed to code run as a result of a webpage request). If these
-# lines are not run, the script will crash when attempting to import the
-# Django models in the line below.
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwql.website.jwql_proj.settings")
-django.setup()
+if not ON_GITHUB_ACTIONS and not ON_READTHEDOCS:
+    # These lines are needed in order to use the Django models in a standalone
+    # script (as opposed to code run as a result of a webpage request). If these
+    # lines are not run, the script will crash when attempting to import the
+    # Django models in the line below.
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwql.website.jwql_proj.settings")
+    django.setup()
 
-from jwql.website.apps.jwql.models import Archive, Observation, Proposal, RootFileInfo  # noqa
-from jwql.utils.constants import JWST_INSTRUMENT_NAMES_MIXEDCASE  # noqa
-from jwql.utils.logging_functions import log_info, log_fail  # noqa
-from jwql.utils.monitor_utils import initialize_instrument_monitor  # noqa
-from jwql.utils.constants import MAST_QUERY_LIMIT  # noqa
-from jwql.utils.utils import filename_parser, filesystem_path, get_config  # noqa
-from jwql.website.apps.jwql.data_containers import create_archived_proposals_context  # noqa
-from jwql.website.apps.jwql.data_containers import get_instrument_proposals, get_filenames_by_instrument  # noqa
-from jwql.website.apps.jwql.data_containers import get_proposal_info, mast_query_filenames_by_instrument, mast_query_by_rootname  # noqa
+    from jwql.website.apps.jwql.models import Archive, Observation, Proposal, RootFileInfo  # noqa
+    from jwql.utils.constants import JWST_INSTRUMENT_NAMES_MIXEDCASE  # noqa
+    from jwql.utils.logging_functions import log_info, log_fail  # noqa
+    from jwql.utils.monitor_utils import initialize_instrument_monitor  # noqa
+    from jwql.utils.constants import MAST_QUERY_LIMIT  # noqa
+    from jwql.utils.utils import filename_parser, filesystem_path, get_config  # noqa
+    from jwql.website.apps.jwql.data_containers import create_archived_proposals_context  # noqa
+    from jwql.website.apps.jwql.data_containers import get_instrument_proposals, get_filenames_by_instrument  # noqa
+    from jwql.website.apps.jwql.data_containers import get_proposal_info, mast_query_filenames_by_instrument, mast_query_by_rootname  # noqa
 
-FILESYSTEM = get_config()['filesystem']
+    FILESYSTEM = get_config()['filesystem']
 
 
 @log_info
