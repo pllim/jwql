@@ -64,9 +64,12 @@ from jwql.utils.constants import (DEFAULT_MODEL_CHARFIELD,
 from jwql.utils.logging_functions import log_info, log_fail
 from jwql.utils.monitor_utils import initialize_instrument_monitor
 from jwql.utils.utils import filename_parser, filesystem_path, get_config
-from jwql.website.apps.jwql.data_containers import create_archived_proposals_context  # noqa
-from jwql.website.apps.jwql.data_containers import get_instrument_proposals, get_filenames_by_instrument  # noqa
-from jwql.website.apps.jwql.data_containers import get_proposal_info, mast_query_filenames_by_instrument, mast_query_by_rootname  # noqa
+from jwql.website.apps.jwql.data_containers import create_archived_proposals_context
+from jwql.website.apps.jwql.data_containers import get_instrument_proposals, get_filenames_by_instrument
+from jwql.website.apps.jwql.data_containers import (get_proposal_info,
+                                                    mast_query_filenames_by_instrument,
+                                                    mast_query_by_rootname
+                                                    )
 
 
 if not ON_GITHUB_ACTIONS and not ON_READTHEDOCS:
