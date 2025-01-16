@@ -30,6 +30,7 @@ Dependencies
     placed in the ``jwql`` directory.
 """
 
+from collections import defaultdict
 from datetime import datetime as dt
 from math import pi
 from operator import itemgetter
@@ -40,16 +41,29 @@ from bokeh.models import Axis, ColumnDataSource, DatetimeTickFormatter, HoverToo
 from bokeh.models.layouts import TabPanel, Tabs
 from bokeh.plotting import figure
 from bokeh.transform import cumsum
+from django import setup
+from django.db.models import OuterRef, Subquery
 import numpy as np
 import pandas as pd
 from sqlalchemy import func, and_
 
 import jwql.database.database_interface as di
 from jwql.database.database_interface import CentralStore
-from jwql.utils.constants import ANOMALY_CHOICES_PER_INSTRUMENT, FILTERS_PER_INSTRUMENT, JWST_INSTRUMENT_NAMES_MIXEDCASE
+from jwql.utils.constants import (ANOMALY_CHOICES_PER_INSTRUMENT,
+                                  FILTERS_PER_INSTRUMENT,
+                                  JWST_INSTRUMENT_NAMES_MIXEDCASE,
+                                  ON_GITHUB_ACTIONS,
+                                  ON_READTHEDOCS
+                                  )
 from jwql.utils.utils import get_base_url, get_config
-from jwql.website.apps.jwql.data_containers import build_table
+from jwql.website.apps.jwql.data_containers import build_table, import_all_models
 from jwql.website.apps.jwql.models import Anomalies
+
+if not ON_GITHUB_ACTIONS and not ON_READTHEDOCS:
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwql.website.jwql_proj.settings")
+    setup()
+
+    from jwql.website.apps.jwql.models import get_model_column_names
 
 
 def build_table_latest_entry(tablename):
@@ -65,46 +79,29 @@ def build_table_latest_entry(tablename):
     table_meta_data : pandas.DataFrame
         Pandas data frame version of JWQL database table.
     """
-    # Make dictionary of tablename : class object
-    # This matches what the user selects in the select element
-    # in the webform to the python object on the backend.
-    tables_of_interest = {}
-    for item in di.__dict__.keys():
-        table = getattr(di, item)
-        if hasattr(table, '__tablename__'):
-            tables_of_interest[table.__tablename__] = table
+    all_models = import_all_models()
+    table_object = all_models.get(tablename)
+    column_names = get_model_column_names(table_object)
 
-    session, _, _, _ = di.load_connection(get_config()['connection_string'])
-    table_object = tables_of_interest[tablename]  # Select table object
+    if 'instrument' not in column_names:
+        raise ValueError(f"No 'instrument' column name in {tablename}. Unable to get latest entry by instrument.")
 
-    subq = session.query(table_object.instrument,
-                         func.max(table_object.date).label('maxdate')
-                         ).group_by(table_object.instrument).subquery('t2')
+    # Create a subquery to get the latest date for each instrument
+    subquery = table_object.objects.filter(instrument=OuterRef('instrument')).order_by('-date').values('date')[:1]
 
-    result = session.query(table_object).join(
-        subq,
-        and_(
-            table_object.instrument == subq.c.instrument,
-            table_object.date == subq.c.maxdate
-        )
-    )
+    # Query the model with the subquery
+    most_recent_entries = table_object.objects.filter(date=Subquery(subquery))
 
-    # Turn query result into list of dicts
-    result_dict = [row.__dict__ for row in result.all()]
-    column_names = table_object.__table__.columns.keys()
+    # Convert the QuerySet into a dictionary
+    rows = most_recent_entries.values()
+    data = defaultdict(list)
 
-    # Build list of column data based on column name.
-    data = []
-    for column in column_names:
-        column_data = list(map(itemgetter(column), result_dict))
-        data.append(column_data)
-
-    data = dict(zip(column_names, data))
+    for row in rows:
+        for key, value in row.items():
+            data[key].append(value)
 
     # Build table.
     table_meta_data = pd.DataFrame(data)
-
-    session.close()
     return table_meta_data
 
 
@@ -360,7 +357,7 @@ class GeneralDashboard:
 
         # Make Pandas DF for filesystem_instrument
         # If time delta exists, filter data based on that.
-        data = build_table('filesystem_instrument')
+        data = build_table('FilesystemInstrument')
 
         # Keep only the rows containing the most recent timestamp
         data = data[data['date'] == data['date'].max()]
@@ -390,8 +387,7 @@ class GeneralDashboard:
         plot : bokeh.plotting.figure
             Pie chart figure
         """
-        # Replace with jwql.website.apps.jwql.data_containers.build_table
-        data = build_table('filesystem_instrument')
+        data = build_table('FilesystemInstrument')
 
         # Keep only the rows containing the most recent timestamp
         data = data[data['date'] == data['date'].max()]
@@ -439,7 +435,7 @@ class GeneralDashboard:
             A figure with tabs for each instrument.
         """
 
-        source = build_table('filesystem_general')
+        source = build_table('FilesystemGeneral')
         if not pd.isnull(self.delta_t):
             source = source[(source['date'] >= self.date - self.delta_t) & (source['date'] <= self.date)]
 
@@ -495,7 +491,7 @@ class GeneralDashboard:
             Numpy array of column values from monitor table.
         """
 
-        data = build_table('monitor')
+        data = build_table('Monitor')
 
         if not pd.isnull(self.delta_t):
             data = data[(data['start_time'] >= self.date - self.delta_t) & (data['start_time'] <= self.date)]
@@ -551,7 +547,7 @@ class GeneralDashboard:
         """
         # build_table_latest_query will return only the database entries with the latest date. This should
         # correspond to one row/entry per instrument
-        data = build_table_latest_entry('filesystem_characteristics')
+        data = build_table_latest_entry('FilesystemCharacteristics')
 
         # Sort by instrument name so that the order of the tabs will always be the same
         data = data.sort_values('instrument')
