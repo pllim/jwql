@@ -27,13 +27,11 @@ import pytest
 
 from jwql.utils.constants import DEFAULT_MODEL_CHARFIELD, ON_GITHUB_ACTIONS, ON_READTHEDOCS
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwql.website.jwql_proj.settings")
-
 # Skip testing this module if on Github Actions
-from jwql.website.apps.jwql import bokeh_dashboard  # noqa: E402 (module level import not at top of file)
-
 if not ON_GITHUB_ACTIONS and not ON_READTHEDOCS:
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwql.website.jwql_proj.settings")
     setup()
+    from jwql.website.apps.jwql import bokeh_dashboard  # noqa: E402 (module level import not at top of file)
 
 
 @pytest.mark.skipif(ON_GITHUB_ACTIONS, reason='Requires access to django models.')
