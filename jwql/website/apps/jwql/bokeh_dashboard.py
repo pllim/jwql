@@ -49,6 +49,7 @@ from sqlalchemy import func, and_
 
 import jwql.database.database_interface as di
 from jwql.database.database_interface import CentralStore
+from jwql.website.apps.jwql.monitor_models.common import CentralStorage
 from jwql.utils.constants import (ANOMALY_CHOICES_PER_INSTRUMENT,
                                   FILTERS_PER_INSTRUMENT,
                                   JWST_INSTRUMENT_NAMES_MIXEDCASE,
@@ -174,16 +175,12 @@ class GeneralDashboard:
         # server disk information.
         config = get_config()
 
-        log_data = di.session.query(CentralStore.date, CentralStore.size, CentralStore.available) \
-            .filter(CentralStore.area == 'logs') \
-            .all()
+        log_data = list(CentralStorage.objects.filter(area='logs').values('date', 'size', 'available'))
 
         # Convert to dataframe
         log_data = pd.DataFrame(log_data)
 
-        preview_data = di.session.query(CentralStore.date, CentralStore.size, CentralStore.available) \
-            .filter(CentralStore.area == 'preview_images') \
-            .all()
+        preview_data = list(CentralStorage.objects.filter(area='preview_images').values('date', 'size', 'available'))
 
         # Convert to dataframe
         preview_data = pd.DataFrame(preview_data)
@@ -244,7 +241,6 @@ class GeneralDashboard:
 
         tabs = Tabs(tabs=tabs)
 
-        di.session.close()
         return tabs
 
     def dashboard_central_store_data_volume(self):
@@ -274,7 +270,7 @@ class GeneralDashboard:
         for area, color in zip(arealist, colors):
 
             # Query for used sizes
-            results = di.session.query(CentralStore.date, CentralStore.used).filter(CentralStore.area == area).all()
+            results = list(CentralStorage.objects.filter(area=area).values('date', 'used'))
 
             if results:
                 # Convert to dataframe
@@ -311,7 +307,7 @@ class GeneralDashboard:
                                 x_axis_label='Date',
                                 y_axis_label='Disk Space (TB)')
 
-        cen_store_results = di.session.query(CentralStore.date, CentralStore.used).filter(CentralStore.area == 'all').all()
+        cen_store_results = list(CentralStorage.objects.filter(area='all').values('date', 'used'))
 
         # Group by date
         if cen_store_results:
@@ -343,7 +339,6 @@ class GeneralDashboard:
             hover_tool.formatters = {'@date': 'datetime'}
             cen_store_plot.tools.append(hover_tool)
 
-        di.session.close()
         return plot, cen_store_plot
 
     def dashboard_filetype_bar_chart(self):
