@@ -219,7 +219,7 @@ class GeneralDashboard:
                                               y_axis_label='Disk Space (TB)')
 
             plots[data['shortname']].line(x='date', y='available', source=source, legend_label='Available', line_dash='dashed', line_color='#C85108', line_width=3)
-            plots[data['shortname']].circle(x='date', y='available', source=source,color='#C85108', radius=5, radius_dimension='y', radius_units='screen')
+            plots[data['shortname']].circle(x='date', y='available', source=source, color='#C85108', radius=5, radius_dimension='y', radius_units='screen')
             plots[data['shortname']].line(x='date', y='used', source=source, legend_label='Used', line_dash='dashed', line_color='#355C7D', line_width=3)
             plots[data['shortname']].circle(x='date', y='used', source=source, color='#355C7D', radius=5, radius_dimension='y', radius_units='screen')
 
