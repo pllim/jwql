@@ -177,25 +177,19 @@ References
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from django_enum import EnumField
-from enum import StrEnum
 
-from jwql.utils.constants import DEFAULT_MODEL_CHARFIELD, MAX_LEN_FILTER, FILE_SUFFIX_TYPES
+from jwql.utils.constants import (
+    DEFAULT_MODEL_CHARFIELD,
+    MAX_LEN_FILTER,
+    MAX_LEN_INSTRUMENT,
+)
 
-FILE_SUFFIX_CLASS = StrEnum('FILE_SUFFIX_CLASS', FILE_SUFFIX_TYPES)
-
-class InstrumentEnum(StrEnum):
-    FGS_TYPE = "fgs"
-    MIRI_TYPE = "miri"
-    NIRCAM_TYPE = "nircam"
-    NIRISS_TYPE = "niriss"
-    NIRSPEC_TYPE = "nirspec"
 
 class Monitor(models.Model):
     monitor_name = models.CharField()
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(blank=True, null=True)
-    status = models.TextField(blank=True, null=True)  # This field type is a guess.
+    status = models.TextField(blank=True, null=True)
     log_file = models.CharField()
 
     class Meta:
@@ -217,7 +211,7 @@ class CentralStorage(models.Model):
 
 class FilesystemCharacteristics(models.Model):
     date = models.DateTimeField()
-    instrument = EnumField(InstrumentEnum)  # This field type is a guess.
+    instrument = models.CharField()
     filter_pupil = ArrayField(
         models.CharField(
             max_length=MAX_LEN_FILTER,
@@ -254,8 +248,12 @@ class FilesystemGeneral(models.Model):
 
 class FilesystemInstrument(models.Model):
     date = models.DateTimeField()
-    instrument = EnumField(InstrumentEnum) # This field type is a guess.
-    filetype = EnumField(FILE_SUFFIX_CLASS)  # This field type is a guess.
+    instrument = models.CharField(
+        max_length=MAX_LEN_INSTRUMENT,
+        help_text="JWST instrument name",
+        default=DEFAULT_MODEL_CHARFIELD,
+    )
+    filetype = models.CharField()
     count = models.IntegerField()
     size = models.FloatField()
 
