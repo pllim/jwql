@@ -33,7 +33,7 @@ import logging
 import os
 import re
 import tempfile
-from collections import OrderedDict
+from collections import defaultdict, OrderedDict
 from datetime import datetime
 from operator import getitem, itemgetter
 
@@ -46,13 +46,12 @@ from astropy.time import Time
 from astroquery.mast import Mast
 from bs4 import BeautifulSoup
 from django import forms, setup
+from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.query import QuerySet
 
-from jwql.database import database_interface as di
-from jwql.database.database_interface import load_connection
 from jwql.edb.engineering_database import get_mnemonic, get_mnemonic_info, mnemonic_inventory
 from jwql.utils.constants import (
     DEFAULT_MODEL_COMMENT,
@@ -82,6 +81,7 @@ from jwql.utils.utils import (
     get_rootnames_for_instrument_proposal,
 )
 
+
 # Increase the limit on the number of entries that can be returned by
 # a MAST query.
 Mast._portal_api_connection.PAGESIZE = MAST_QUERY_LIMIT
@@ -95,7 +95,7 @@ if not ON_GITHUB_ACTIONS and not ON_READTHEDOCS:
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwql.website.jwql_proj.settings")
     setup()
 
-    from jwql.website.apps.jwql.models import Anomalies, Observation, Proposal, RootFileInfo
+    from jwql.website.apps.jwql.models import Anomalies, get_model_column_names, Observation, Proposal, RootFileInfo
 
     from .forms import (
         InstrumentAnomalySubmitForm,
@@ -138,36 +138,23 @@ def build_table(tablename):
     table_meta_data : pandas.DataFrame
         Pandas data frame version of JWQL database table.
     """
-    # Make dictionary of tablename : class object
-    # This matches what the user selects in the select element
-    # in the webform to the python object on the backend.
-    tables_of_interest = {}
-    for item in di.__dict__.keys():
-        table = getattr(di, item)
-        if hasattr(table, '__tablename__'):
-            tables_of_interest[table.__tablename__] = table
+    all_models = import_all_models()
+    table_object = all_models.get(tablename)
 
-    session, _, _, _ = load_connection(get_config()['connection_string'])
-    table_object = tables_of_interest[tablename]  # Select table object
+    result = table_object.objects.all()
+    column_names = get_model_column_names(table_object)
 
-    result = session.query(table_object)
+    # Convert the QuerySet into a dictionary
+    rows = result.values()
+    data = defaultdict(list)
 
-    # Turn query result into list of dicts
-    result_dict = [row.__dict__ for row in result.all()]
-    column_names = table_object.__table__.columns.keys()
-
-    # Build list of column data based on column name.
-    data = []
-    for column in column_names:
-        column_data = list(map(itemgetter(column), result_dict))
-        data.append(column_data)
-
-    data = dict(zip(column_names, data))
+    for row in rows:
+        for key, value in row.items():
+            data[key].append(value)
 
     # Build table.
     table_meta_data = pd.DataFrame(data)
 
-    session.close()
     return table_meta_data
 
 
@@ -1930,6 +1917,22 @@ def get_thumbnail_by_rootname(rootname):
             thumbnail_basename = os.path.basename(preferred[0])
 
     return thumbnail_basename
+
+
+def import_all_models():
+    """
+    Dynamically import and return all Django models as a dictionary.
+    Keys are model names (as strings), and values are model classes.
+
+    Returns
+    -------
+    models : dict
+        Keys are model names, values are model classes
+    """
+    models = {}
+    for model in apps.get_app_config('jwql').get_models():
+        models[model.__name__] = model
+    return models
 
 
 def log_into_mast(request):
